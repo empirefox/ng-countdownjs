@@ -1,28 +1,64 @@
-# NgCountdownjs
+# [Countdownjs](https://github.com/mckamey/countdownjs) component for @angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+## Installation
 
-## Development server
+```bash
+npm i -S ng-countdownjs
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Usage
 
-## Code scaffolding
+Import `CountdownModule`:
+```typescript
+import { CountdownModule } from 'ng-countdownjs';
+import { AppComponent } from './app.component';
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule,
+    CountdownModule,
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
 
-## Build
+Add following to template:
+```html
+<countdown [auto]="auto" [time]="time1" [units]="seconds" key="countdown_time1_key" (changed)="ts1=$event">
+  {{ts1?.seconds}}
+</countdown>
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+<countdown [auto]="auto" [time]="time2" (changed)="ts2=$event">
+ <span *ngIf="ts2">{{ts2.hours}}:{{ts2.minutes}}:{{ts2.seconds}}</span>
+</countdown>
 
-## Running unit tests
+<countdown #countdown="countdown" [units]="seconds" (started)="onStart($event)" (changed)="ts3=$event">
+  <span *ngIf="started" class="countdown">{{ts3.seconds}}</span>
+  <button *ngIf="!started" (click)="countdown.start(time(10))">start from 10</button>
+  <button *ngIf="started" (click)="countdown.stop()">stop time</button>
+  <button *ngIf="started" (click)="countdown.restart(time(3))">restart from 3</button>
+</countdown>
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Inputs
 
-## Running end-to-end tests
+- `auto`: boolean; auto start countdown
+- `key`: string; `localStorage` key to save/load the end time
+- `time`: number | Date; end <Date>time or value of `Date.getTime()`
+- `units`: number; `countdown.SECONDS`, `countdown.MINUTES` ...
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+## Outputs
 
-## Further help
+- `changed`: `countdown.Timespan`
+- `started`: `boolean`
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Methods
+
+- `start(end?: number | Date)`
+- `restart(end?: number | Date)`
+- `stop()`

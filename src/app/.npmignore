@@ -1,0 +1,5 @@
+*.spec.*
+*.e2e.*
+demo
+app.*
+.gitignore
